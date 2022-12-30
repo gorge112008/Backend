@@ -2,33 +2,32 @@ const express = require("express");
 const app = express();
 const { productManager } = require("./ProductManager.js");
 
-//setear todo el servidor
-
 //endpoint
-app.get("/products", async function (req, res) {
+app.get("/products", function (req, res) {
   try {
-    let productos = await productManager.getProducts();
-    const limite = req.query.limite;
-    if (limite && !isNaN(Number(limite))) {
-        productos= productos.slice(0,limite);
+    let response = productManager.getProducts();
+    const limit = req.query.limit;
+    if (limit && !isNaN(Number(limit))) {
+      response = response.slice(0, limit);
     }
-    res.send(productos);
+    res.send(response);
   } catch (error) {
     console.log(error);
   }
 });
 
-app.get("/products/:pid", async function (req, res) {
+app.get("/products/:pid", function (req, res) {
   try {
     const pid = req.params.pid;
-    const productos = await productManager.getProductById(pid);
-    res.send(productos);
+    const response = productManager.getProductById(pid);
+    res.send(response);
   } catch (error) {
     console.log(error);
   }
 });
 
-//levantar el servidor
+//raise the server
+
 app.listen(3000, () => {
-  console.log("Servidor levantado en el puerto", 3000);
+  console.log("Server up in port", 3000);
 });

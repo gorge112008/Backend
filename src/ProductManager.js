@@ -44,27 +44,27 @@ class ProductManager {
     }
   }
 
-  async getProducts() {
+  getProducts() {
     try {
-      const content = await fs.promises.readFile(this.path, "utf-8");
+      const content = fs.readFileSync(this.path, "utf-8");
       const parseContent = JSON.parse(content);
-      console.log(parseContent);
       return parseContent;
     } catch (error) {
-      console.log('Error: Not products found.');
+      console.log("Error: Not products found.");
+      return [];
     }
   }
 
-  async getProductById(id) {
+  getProductById(id) {
     try {
-      const arrayProducts = await this.getProducts();
+      const arrayProducts = this.getProducts();
       const searchID = arrayProducts.find((item) => item.id == id);
-      if (!searchID) throw new Error (`Not products found with id ${id}`); 
+      if (!searchID) throw new Error(`Not products found with id ${id}`);
       else {
         console.log(
           `Here's your product: ${JSON.stringify(searchID.description)}`
         );
-        return searchID; 
+        return searchID;
       }
     } catch (error) {
       console.error(`Not products found with id ${id}`);
@@ -74,10 +74,17 @@ class ProductManager {
   async updateProduct(id, product) {
     try {
       const arrayProducts = await this.getProducts();
-      const targetProduct = arrayProducts.map((productoT)=> productoT.id===id?{ ...productoT, ...product }:productoT);
+      const targetProduct = arrayProducts.map((productoT) =>
+        productoT.id === id ? { ...productoT, ...product } : productoT
+      );
 
-      if (!arrayProducts.find((product)=> product.id===id)) throw new Error (`Not products found with id ${id}`);
-      else await fs.promises.writeFile(this.path, JSON.stringify(targetProduct,null,4));
+      if (!arrayProducts.find((product) => product.id === id))
+        throw new Error(`Not products found with id ${id}`);
+      else
+        await fs.promises.writeFile(
+          this.path,
+          JSON.stringify(targetProduct, null, 4)
+        );
     } catch (error) {
       console.log(`Could not update product with id ${id}.`);
     }
@@ -85,9 +92,16 @@ class ProductManager {
   async deleteProduct(id) {
     try {
       const arrayProducts = await this.getProducts();
-      const targetProduct = arrayProducts.filter((productoT)=> productoT.id!==id);
-      if (!arrayProducts.find((product)=> product.id===id)) throw new Error (`Not products found with id ${id}`);
-    else await fs.promises.writeFile(this.path, JSON.stringify(targetProduct,null,4));
+      const targetProduct = arrayProducts.filter(
+        (productoT) => productoT.id !== id
+      );
+      if (!arrayProducts.find((product) => product.id === id))
+        throw new Error(`Not products found with id ${id}`);
+      else
+        await fs.promises.writeFile(
+          this.path,
+          JSON.stringify(targetProduct, null, 4)
+        );
     } catch (error) {
       console.log(`Could not delete product with id ${id}.`);
     }
@@ -125,18 +139,18 @@ const product3 = {
   stock: 30,
 };
 
-console.log("\n" + "PRODUCT LIST: ");
+/*productList.addProduct(product1);*/ /*AÑADIR PRODUCTOS*/
+/*productList.addProduct(product2);*/ /*AÑADIR PRODUCTOS*/
+/*productList.addProduct(product3);*/ /*AÑADIR PRODUCTOS*/
 
-/*productList.addProduct(product1);*//*AÑADIR PRODUCTOS*/
-/*productList.addProduct(product2);*//*AÑADIR PRODUCTOS*/
-/*productList.addProduct(product3);*//*AÑADIR PRODUCTOS*/
+/*console.log(productList.getProducts());*/ /*MOSTRAR PRODUCTOS*/
 
-console.log(productList.getProducts()); /*MOSTRAR PRODUCTOS*/
+/*console.log(productList.getProductById(2));*/ /*MOSTRAR PRODUCTO CON ID 2*/
 
 /*productList.deleteProduct(1);*//*ELIMINAR PRODUCTOS*/
 
-/*productList.updateProduct(1, {price: 20});*//*ACTUALIZAR PRODUCTOS*/
+/*productList.updateProduct(2, {price: 10});*/ /*ACTUALIZAR PRODUCTOS*/
 
 module.exports = {
-  productManager: productList
-}
+  productManager: productList,
+};
