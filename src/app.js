@@ -2,8 +2,6 @@ const express = require("express");
 const app = express();
 const { productManager } = require("./ProductManager.js");
 
-//setear todo el servidor
-
 //endpoint
 app.get("/products", async function (req, res) {
   try {
